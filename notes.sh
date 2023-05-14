@@ -2,7 +2,7 @@
 
 echo "notes."
 
-mkdir ~/notes/ > /dev/null 2>&1
+mkdir -p ~/notes/ 
 
 
 halp()
