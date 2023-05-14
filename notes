@@ -2,40 +2,54 @@
 
 echo "notes."
 
-mkdir -p ~/notes/ 
+initdir () {
+	rm -r ~/.config/notes.sh > /dev/null 2>&1
+	mkdir -p ~/.config && mkdir -p ~/.config/notes.sh
+	echo "~/notes/" >> ~/.config/notes.sh/config
+	}
 
+customdir () {
+	read -r -p "custom directory [/home/aadi/notes/]: " customdir
+	mkdir $customdir
+	rm ~/.config/notes.sh/config && echo $customdir >> ~/.config/notes.sh/config
+	}
 
 halp() {
 	echo "notes.sh is a simple note taking tool."
 	echo
-	echo "syntax: notes [-n|l|h|r]"
+	echo "syntax: notes [-i|n|l|r|h]"
 	echo "options:"
+	echo "i     init notes.sh config."
 	echo "n     make a new note."
 	echo "l     list all notes."
 	echo "r     delete a note."
+	echo "c     use a custom dir."
 	echo "h     print help."
 	echo
 	}
 
 newnote() {
+	dir=$(cat ~/.config/notes.sh/config)
 	read -r -p "name of your note: " name
-	echo $name >> ~/notes/$name
+	echo $name >> $dir$name
 	read -r -p "date: " date
-	echo $date >> ~/notes/$name
-	echo "---" >> ~/notes/$name	
-	"${EDITOR:-vim}" ~/notes/$name
+	echo $date >> $dir$name
+	echo "---" >> $dir$name	
+	"${EDITOR:-vim}" $dir$name
 	}
 
 listnotes() {
+	dir=$(cat ~/.config/notes.sh/config)
 	echo ""
-	ls ~/notes/
+	ls $dir
 	}
 
 removenote() {
-	rm ~/notes/$rmname && echo "removed $rmname"
+	dir=$(cat ~/.config/notes.sh/config)
+	rm $dir$rmname && echo "removed $rmname"
 	}
 
-while getopts ":hnlr:" option; do
+while getopts ":hnlicr:" option; do
 	case $option in
 		h) 
 			halp
@@ -44,6 +58,10 @@ while getopts ":hnlr:" option; do
 			newnote;;
 		l)
 			listnotes;;
+		i)
+			initdir;;
+		c)
+			customdir;;
 		r)
 			rmname=$OPTARG
 			removenote;;
