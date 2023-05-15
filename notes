@@ -3,9 +3,10 @@
 echo "notes."
 
 initdir () {
+	mkdir -p ~/notes/
 	rm -r ~/.config/notes.sh > /dev/null 2>&1
 	mkdir -p ~/.config && mkdir -p ~/.config/notes.sh
-	echo "~/notes/" >> ~/.config/notes.sh/config
+	echo "$HOME/notes/" >> ~/.config/notes.sh/config
 	}
 
 customdir () {
@@ -13,6 +14,8 @@ customdir () {
 	mkdir $customdir
 	rm ~/.config/notes.sh/config && echo $customdir >> ~/.config/notes.sh/config
 	}
+
+dir=$(cat $HOME/.config/notes.sh/config)
 
 halp() {
 	echo "notes.sh is a simple note taking tool."
@@ -29,8 +32,8 @@ halp() {
 	}
 
 newnote() {
-	dir=$(cat ~/.config/notes.sh/config)
 	read -r -p "name of your note: " name
+	touch $dir$name
 	echo $name >> $dir$name
 	read -r -p "date: " date
 	echo $date >> $dir$name
@@ -39,13 +42,11 @@ newnote() {
 	}
 
 listnotes() {
-	dir=$(cat ~/.config/notes.sh/config)
 	echo ""
 	ls $dir
 	}
 
 removenote() {
-	dir=$(cat ~/.config/notes.sh/config)
 	rm $dir$rmname && echo "removed $rmname"
 	}
 
