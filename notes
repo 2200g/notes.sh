@@ -67,8 +67,7 @@ while getopts ":hnlicr:" option; do
 			rmname=$OPTARG
 			removenote;;
 		\?)
-			echo "error: invalid option."
-			exit;;
+			newnote;;
 	esac
 done
 
